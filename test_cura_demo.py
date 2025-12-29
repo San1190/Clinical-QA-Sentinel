@@ -1,10 +1,9 @@
 """
-CURA Healthcare Login Test - CORREGIDO
-========================================
-Flujo correcto: Home → Click "Make Appointment" → Login → Appointment Form
+CURA Healthcare - Test Completo
+================================
+Login + Agendar Cita Completa
 """
 
-from pages.login_page import LoginPage
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
@@ -12,150 +11,114 @@ from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.ui import Select
 import json
-import logging
-
-logging.basicConfig(level=logging.INFO)
 
 
-def load_simple_config():
-    """Load configuration from JSON file"""
+def load_config():
     with open('config/config.json', 'r') as f:
         return json.load(f)
 
 
-def test_cura_login():
-    """Test login contra CURA Healthcare siguiendo el flujo correcto"""
+def test_cura_full_flow():
+    """Login y agendar cita completa"""
     
-    config = load_simple_config()
+    config = load_config()
     username = config['environments']['demo']['username']
     password = config['environments']['demo']['password']
-    home_url = config['portal_url']
+    url = config['portal_url']
     
-    print("\n" + "="*70)
-    print("🏥 CURA Healthcare - Test de Login CORREGIDO")
-    print("="*70)
-    print(f"🌐 Home URL: {home_url}")
-    print(f"👤 Usuario: {username}")
-    print(f"🔒 Password: {'*' * len(password)}")
-    print("-"*70)
+    print("\nCURA Healthcare - Test Completo")
+    print("-" * 50)
     
+    # Chrome sin distracciones
     options = Options()
     options.add_argument('--start-maximized')
+    options.add_experimental_option("prefs", {
+        "credentials_enable_service": False,
+        "profile.password_manager_enabled": False
+    })
+    options.add_argument('--disable-notifications')
+    options.add_experimental_option("excludeSwitches", ["enable-automation"])
     
-    print("\n📦 Iniciando ChromeDriver...")
-    service = Service(ChromeDriverManager().install())
-    driver = webdriver.Chrome(service=service, options=options)
+    driver = webdriver.Chrome(
+        service=Service(ChromeDriverManager().install()),
+        options=options
+    )
+    wait = WebDriverWait(driver, 10)
     
     try:
-        # PASO 1: Ir a la home
-        print("\n1️⃣  Navegando a la página principal...")
-        driver.get(home_url)
-        print(f"   ✓ Página cargada: {driver.title}")
+        # 1. Home
+        print("1. Navegando a home...")
+        driver.get(url)
         
-        # PASO 2: Click en "Make Appointment" (esto nos lleva al login)
-        print("\n2️⃣  Haciendo click en 'Make Appointment'...")
-        wait = WebDriverWait(driver, 10)
-        make_appointment_btn = wait.until(
-            EC.element_to_be_clickable((By.ID, "btn-make-appointment"))
-        )
-        make_appointment_btn.click()
-        print("   ✓ Botón clickeado - redirigiendo al login...")
+        # 2. Make Appointment
+        print("2. Click 'Make Appointment'...")
+        wait.until(EC.element_to_be_clickable((By.ID, "btn-make-appointment"))).click()
         
-        # PASO 3: Esperar que aparezca el formulario de login
-        print("\n3️⃣  Esperando formulario de login...")
-        username_field = wait.until(
-            EC.presence_of_element_located((By.ID, "txt-username"))
-        )
-        print(f"   ✓ Formulario de login detectado")
-        print(f"   📍 URL actual: {driver.current_url}")
+        # 3. Login
+        print("3. Login...")
+        wait.until(EC.presence_of_element_located((By.ID, "txt-username"))).send_keys(username)
+        driver.find_element(By.ID, "txt-password").send_keys(password)
+        driver.find_element(By.ID, "btn-login").click()
         
-        # PASO 4: Llenar credenciales usando el page object
-        print("\n4️⃣  Llenando credenciales...")
-        login_page = LoginPage(driver, config)
+        # 4. Llenar formulario de appointment
+        print("4. Llenando formulario...")
+        wait.until(EC.presence_of_element_located((By.ID, "combo_facility")))
         
-        login_page.enter_username(username)
-        print(f"   ✓ Usuario ingresado: {username}")
+        # Facility
+        Select(driver.find_element(By.ID, "combo_facility")).select_by_value("Hongkong CURA Healthcare Center")
         
-        login_page.enter_password(password)
-        print(f"   ✓ Contraseña ingresada: ********")
+        # Readmission
+        driver.find_element(By.ID, "chk_hospotal_readmission").click()
         
-        # PASO 5: Click en login
-        print("\n5️⃣  Haciendo login...")
-        login_page.click_login_button()
-        print("   ✓ Click en botón de login ejecutado")
+        # Program (Medicaid)
+        driver.find_element(By.ID, "radio_program_medicaid").click()
         
-        # PASO 6: Verificar que llegamos al formulario de appointment
-        print("\n6️⃣  Verificando resultado...")
-        import time
-        time.sleep(2)
+        # Visit Date
+        driver.find_element(By.ID, "txt_visit_date").send_keys("31/12/2025")
         
-        # Buscar el formulario de appointment
-        appointment_form = wait.until(
-            EC.presence_of_element_located((By.ID, "appointment"))
-        )
+        # Comment
+        driver.find_element(By.ID, "txt_comment").send_keys("Test automatizado con Selenium")
         
-        if appointment_form:
-            print("\n" + "="*70)
-            print("✅ ¡LOGIN EXITOSO!")
-            print("="*70)
-            print(f"📍 URL final: {driver.current_url}")
-            print(f"📄 Título: {driver.title}")
-            print("\n🎉 ¡Estamos en el formulario de 'Make Appointment'!")
-            print("   Esto significa que el login funcionó correctamente")
+        # 5. Book appointment
+        print("5. Agendando cita...")
+        driver.find_element(By.ID, "btn-book-appointment").click()
+        
+        # 6. Verificar confirmación
+        print("6. Verificando confirmación...")
+        confirmation = wait.until(EC.presence_of_element_located((By.TAG_NAME, "h2")))
+        
+        if "Appointment Confirmation" in driver.page_source:
+            print("\n✓ ÉXITO: Cita agendada correctamente")
+            print(f"  URL: {driver.current_url}")
             
             # Screenshot
-            screenshot = login_page.take_screenshot("cura_login_success")
-            print(f"\n📸 Screenshot guardado: {screenshot}")
+            driver.save_screenshot("screenshots/cita_confirmada.png")
+            print(f"  Screenshot: screenshots/cita_confirmada.png")
             
-            print("\n💡 Observa el navegador:")
-            print("   - Deberías ver el formulario para agendar cita")
-            print("   - Facility dropdown")
-            print("   - Visit Date")
-            print("   - Comment box")
+            # Pausa para ver
+            import time
+            print("\n  Puedes ver la confirmación en el navegador")
+            print("  Cerrando en 3 segundos...")
+            time.sleep(3)
             
-            input("\n⏸️  Presiona ENTER para cerrar...")
             return True
         else:
-            print("\n❌ No se encontró el formulario de appointment")
+            print("\n✗ ERROR: No se encontró confirmación")
+            driver.save_screenshot("screenshots/error.png")
             return False
             
     except Exception as e:
-        print(f"\n❌ Error: {e}")
-        import traceback
-        traceback.print_exc()
-        
-        # Screenshot de error
-        try:
-            driver.save_screenshot("screenshots/error.png")
-            print("📸 Screenshot de error guardado")
-        except:
-            pass
-        
+        print(f"\n✗ ERROR: {e}")
+        driver.save_screenshot("screenshots/error.png")
         return False
         
     finally:
-        print("\n🔚 Cerrando navegador...")
         driver.quit()
+        print("  Navegador cerrado\n")
 
 
 if __name__ == "__main__":
-    print("\n🚀 "*25)
-    print("CURA HEALTHCARE - LOGIN TEST (FLUJO CORRECTO)")
-    print("🚀 "*25)
-    print("\nFlujo:")
-    print("  1. Home page")
-    print("  2. Click 'Make Appointment'")
-    print("  3. Aparece formulario de login")
-    print("  4. Llenar credenciales")
-    print("  5. Login")
-    print("  6. ✓ Formulario de appointment")
-    
-    success = test_cura_login()
-    
-    if success:
-        print("\n✅ ¡Test EXITOSO!")
-        exit(0)
-    else:
-        print("\n❌ Test falló")
-        exit(1)
+    success = test_cura_full_flow()
+    exit(0 if success else 1)
