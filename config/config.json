@@ -1,115 +1,37 @@
 {
+    "browser": "chrome",
+    "env": "demo",
+    "timeout": 10,
+    "headless": false,
     "environments": {
         "dev": {
-            "portal_url": "http://localhost:8080/login",
-            "base_url": "http://localhost:8080"
-        },
-        "test": {
-            "portal_url": "https://test-hospital-demo.com/login",
-            "base_url": "https://test-hospital-demo.com"
-        },
-        "staging": {
-            "portal_url": "https://staging-hospital-demo.com/login",
-            "base_url": "https://staging-hospital-demo.com"
+            "base_url": "http://localhost:8080",
+            "username": "admin",
+            "password": "password"
         },
         "demo": {
-            "portal_url": "http://hospital-demo.com/login",
-            "base_url": "http://hospital-demo.com"
+            "base_url": "https://katalon-demo-cura.herokuapp.com",
+            "username": "John Doe",
+            "password": "ThisIsNotAPassword"
         }
     },
-    "active_environment": "demo",
+    "locators": {
+        "homepage": {
+            "make_appointment_button": "id:btn-make-appointment"
+        },
+        "login_page": {
+            "username_input": "id:txt-username",
+            "password_input": "id:txt-password",
+            "login_button": "id:btn-login",
+            "success_indicator": "id:appointment",
+            "error_message": "class:text-danger"
+        }
+    },
     "timeouts": {
         "page_load_timeout": 10,
         "element_wait_timeout": 5,
-        "implicit_wait": 2,
-        "post_action_delay": 2.0
+        "implicit_wait": 2
     },
-    "browser": {
-        "name": "chrome",
-        "headless": false,
-        "window_size": {
-            "width": 1920,
-            "height": 1080
-        },
-        "options": [
-            "--incognito",
-            "--disable-blink-features=AutomationControlled",
-            "--disable-save-password-bubble",
-            "--disable-gpu",
-            "--no-sandbox",
-            "--disable-dev-shm-usage"
-        ]
-    },
-    "logging": {
-        "level": "INFO",
-        "audit_file": "login_audit.log",
-        "format": "%(asctime)s | SEVERITY: %(levelname)s | SESSION: %(name)s | %(message)s",
-        "date_format": "%Y-%m-%d %H:%M:%S UTC"
-    },
-    "test_users": [
-        {
-            "username": "dr.test.valid@hospital-demo.com",
-            "password": "SecurePass123!",
-            "role": "Medical Professional",
-            "expected_result": "SUCCESS",
-            "test_id": "AUTH-TEST-001"
-        },
-        {
-            "username": "dr.test.invalid@hospital-demo.com",
-            "password": "WrongPassword456!",
-            "role": "Medical Professional",
-            "expected_result": "FAIL_INVALID_CREDENTIALS",
-            "test_id": "AUTH-TEST-002"
-        },
-        {
-            "username": "dr.test.locked@hospital-demo.com",
-            "password": "SecurePass789!",
-            "role": "Medical Professional",
-            "expected_result": "FAIL_ACCOUNT_LOCKED",
-            "test_id": "AUTH-TEST-003"
-        }
-    ],
-    "locators": {
-        "login_page": {
-            "username_field": {
-                "by": "ID",
-                "value": "username"
-            },
-            "password_field": {
-                "by": "ID",
-                "value": "password"
-            },
-            "login_button": {
-                "by": "CSS_SELECTOR",
-                "value": "button[type='submit']"
-            },
-            "error_message": {
-                "by": "CLASS_NAME",
-                "value": "error-message"
-            },
-            "error_invalid_credentials": {
-                "by": "CLASS_NAME",
-                "value": "error-invalid-credentials"
-            },
-            "error_account_locked": {
-                "by": "CLASS_NAME",
-                "value": "error-account-locked"
-            },
-            "dashboard_indicator": {
-                "by": "ID",
-                "value": "dashboard"
-            }
-        }
-    },
-    "reporting": {
-        "html_report_path": "reports/test_report.html",
-        "screenshots_dir": "screenshots",
-        "capture_on_failure": true,
-        "capture_on_success": false
-    },
-    "data_generation": {
-        "default_patient_count": 100,
-        "output_file": "dummy_patients.csv",
-        "random_seed": null
-    }
+    "active_environment": "demo",
+    "portal_url": "https://katalon-demo-cura.herokuapp.com"
 }

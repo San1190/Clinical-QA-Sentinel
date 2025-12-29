@@ -31,30 +31,32 @@ class LoginPage(BasePage):
         locators_config = config.get('locators', {}).get('login_page', {})
         
         # Convert config locators to Selenium By tuples
-        self.USERNAME_FIELD = self._parse_locator(locators_config.get('username_field'))
-        self.PASSWORD_FIELD = self._parse_locator(locators_config.get('password_field'))
+        self.USERNAME_FIELD = self._parse_locator(locators_config.get('username_input'))
+        self.PASSWORD_FIELD = self._parse_locator(locators_config.get('password_input'))
         self.LOGIN_BUTTON = self._parse_locator(locators_config.get('login_button'))
         self.ERROR_MESSAGE = self._parse_locator(locators_config.get('error_message'))
-        self.ERROR_INVALID_CREDENTIALS = self._parse_locator(locators_config.get('error_invalid_credentials'))
-        self.ERROR_ACCOUNT_LOCKED = self._parse_locator(locators_config.get('error_account_locked'))
-        self.DASHBOARD_INDICATOR = self._parse_locator(locators_config.get('dashboard_indicator'))
+        self.SUCCESS_INDICATOR = self._parse_locator(locators_config.get('success_indicator'))
         
         # Fallback to hardcoded locators if not in config (for backwards compatibility)
         if not self.USERNAME_FIELD:
-            self.USERNAME_FIELD = (By.ID, "username")
+            self.USERNAME_FIELD = (By.ID, "txt-username")
         if not self.PASSWORD_FIELD:
-            self.PASSWORD_FIELD = (By.ID, "password")
+            self.PASSWORD_FIELD = (By.ID, "txt-password")
         if not self.LOGIN_BUTTON:
-            self.LOGIN_BUTTON = (By.CSS_SELECTOR, "button[type='submit']")
-        if not self.DASHBOARD_INDICATOR:
-            self.DASHBOARD_INDICATOR = (By.ID, "dashboard")
+            self.LOGIN_BUTTON = (By.ID, "btn-login")
+        if not self.SUCCESS_INDICATOR:
+            self.SUCCESS_INDICATOR = (By.ID, "appointment")
     
-    def _parse_locator(self, locator_config: Optional[dict]) -> Optional[Tuple[str, str]]:
+    def _parse_locator(self, locator_config: Optional[any]) -> Optional[Tuple[str, str]]:
         """
-        Parse locator from configuration dictionary.
+        Parse locator from configuration.
+        
+        Supports two formats:
+        1. Dictionary: {'by': 'ID', 'value': 'username'}
+        2. String: 'id:username' or 'class:text-danger'
         
         Args:
-            locator_config: Dict with 'by' and 'value' keys
+            locator_config: Dict with 'by' and 'value' keys OR string "type:value"
             
         Returns:
             Tuple of (By.METHOD, "value") or None
@@ -62,24 +64,38 @@ class LoginPage(BasePage):
         if not locator_config:
             return None
         
-        by_method = locator_config.get('by', '').upper()
-        value = locator_config.get('value', '')
-        
         # Map string to By constant
         by_mapping = {
             'ID': By.ID,
             'NAME': By.NAME,
             'CLASS_NAME': By.CLASS_NAME,
+            'CLASS': By.CLASS_NAME,  # Shorthand
             'TAG_NAME': By.TAG_NAME,
             'LINK_TEXT': By.LINK_TEXT,
             'PARTIAL_LINK_TEXT': By.PARTIAL_LINK_TEXT,
             'CSS_SELECTOR': By.CSS_SELECTOR,
+            'CSS': By.CSS_SELECTOR,  # Shorthand
             'XPATH': By.XPATH
         }
         
-        by_constant = by_mapping.get(by_method)
-        if by_constant and value:
-            return (by_constant, value)
+        # Format 1: String format "id:txt-username"
+        if isinstance(locator_config, str) and ':' in locator_config:
+            parts = locator_config.split(':', 1)
+            by_method = parts[0].upper()
+            value = parts[1] if len(parts) > 1 else ''
+            
+            by_constant = by_mapping.get(by_method)
+            if by_constant and value:
+                return (by_constant, value)
+        
+        # Format 2: Dictionary format {'by': 'ID', 'value': 'username'}
+        elif isinstance(locator_config, dict):
+            by_method = locator_config.get('by', '').upper()
+            value = locator_config.get('value', '')
+            
+            by_constant = by_mapping.get(by_method)
+            if by_constant and value:
+                return (by_constant, value)
         
         return None
     
@@ -151,25 +167,25 @@ class LoginPage(BasePage):
     
     def is_login_successful(self, timeout: int = 5) -> bool:
         """
-        Check if login was successful by looking for dashboard indicator.
+        Check if login was successful by looking for success indicator.
         
         Args:
-            timeout: Time to wait for dashboard
+            timeout: Time to wait for success indicator
             
         Returns:
-            bool: True if dashboard appears (successful login)
+            bool: True if success element appears (successful login)
         """
         try:
-            dashboard_present = self.is_element_present(self.DASHBOARD_INDICATOR, timeout=timeout)
+            success_present = self.is_element_present(self.SUCCESS_INDICATOR, timeout=timeout)
             
-            if dashboard_present:
-                self.logger.info("Login successful - dashboard detected")
+            if success_present:
+                self.logger.info("Login successful - success indicator detected")
                 return True
             
             # Also check URL change (alternative success indicator)
             current_url = self.get_current_url()
-            if 'dashboard' in current_url or 'home' in current_url:
-                self.logger.info("Login successful - URL changed to dashboard/home")
+            if 'appointment' in current_url or 'dashboard' in current_url or 'home' in current_url:
+                self.logger.info("Login successful - URL changed")
                 return True
             
             return False
