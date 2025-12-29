@@ -2,7 +2,7 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 [![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
-[![Healthcare](https://img.shields.io/badge/sector-HealthTech-green.svg)](https://github.com/yourusername/Clinical-QA-Sentinel)
+[![Healthcare](https://img.shields.io/badge/sector-HealthTech-green.svg)](https://github.com/San1190/Clinical-QA-Sentinel)
 
 > **Enterprise-Grade QA Automation Framework for Healthcare Systems**
 
@@ -54,7 +54,7 @@ Clinical-QA-Sentinel/
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/yourusername/Clinical-QA-Sentinel.git
+   git clone https://github.com/San1190/Clinical-QA-Sentinel.git
    cd Clinical-QA-Sentinel
    ```
 
@@ -258,9 +258,9 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 For questions, issues, or feature requests:
 
-- **Issues**: [GitHub Issues](https://github.com/yourusername/Clinical-QA-Sentinel/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/yourusername/Clinical-QA-Sentinel/discussions)
-- **Email**: your.email@example.com
+- **Issues**: [GitHub Issues](https://github.com/San1190/Clinical-QA-Sentinel/issues)
+- **Discussions**: [GitHub Discussions](https://github.com/San1190/Clinical-QA-Sentinel/discussions)
+- **Email**: santiago.developer@healthtech.com
 
 ---
 
