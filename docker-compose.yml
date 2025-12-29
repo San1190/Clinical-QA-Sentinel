@@ -1,0 +1,113 @@
+# ============================================================================
+# Docker Compose Configuration
+# ============================================================================
+# Purpose: Orchestrate Clinical-QA-Sentinel services
+# Usage: docker-compose up
+
+version: '3.8'
+
+services:
+  # ==========================================================================
+  # Main Test Execution Service
+  # ==========================================================================
+  qa-tests:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: clinical-qa-tests
+    environment:
+      - ENVIRONMENT=demo
+      - HEADLESS_MODE=true
+      - PYTHONUNBUFFERED=1
+    volumes:
+      # Mount reports directory to persist results
+      - ./reports:/app/reports
+      # Mount screenshots directory
+      - ./screenshots:/app/screenshots
+      # Mount logs directory
+      - ./logs:/app/logs
+      # Mount data directory for patient data
+      - ./data:/app/data
+    command: pytest tests/ --html=reports/test_report.html --self-contained-html -v
+    networks:
+      - qa-network
+
+  # ==========================================================================
+  # Data Generation Service
+  # ==========================================================================
+  data-generator:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: clinical-data-generator
+    environment:
+      - PYTHONUNBUFFERED=1
+    volumes:
+      - ./data:/app/data
+    command: python src/patient_data_generator.py
+    networks:
+      - qa-network
+    profiles:
+      - data-gen # Only run when explicitly called
+
+  # ==========================================================================
+  # Optional: Selenium Grid Hub (for parallel execution)
+  # ==========================================================================
+  selenium-hub:
+    image: selenium/hub:latest
+    container_name: selenium-hub
+    ports:
+      - "4444:4444"
+    networks:
+      - qa-network
+    profiles:
+      - grid # Only run when explicitly called
+
+  # ==========================================================================
+  # Optional: Chrome Node for Selenium Grid
+  # ==========================================================================
+  chrome-node:
+    image: selenium/node-chrome:latest
+    container_name: chrome-node
+    depends_on:
+      - selenium-hub
+    environment:
+      - SE_EVENT_BUS_HOST=selenium-hub
+      - SE_EVENT_BUS_PUBLISH_PORT=4442
+      - SE_EVENT_BUS_SUBSCRIBE_PORT=4443
+    networks:
+      - qa-network
+    profiles:
+      - grid
+
+# ============================================================================
+# Networks
+# ============================================================================
+networks:
+  qa-network:
+    driver: bridge
+
+# ============================================================================
+# Volumes (optional - for persistent data)
+# ============================================================================
+volumes:
+  test-reports:
+  test-screenshots:
+
+    # ============================================================================
+    # Usage Examples:
+    # ============================================================================
+    # Run tests:
+    #   docker-compose up qa-tests
+    #
+    # Generate patient data:
+    #   docker-compose --profile data-gen up data-generator
+    #
+    # Run with Selenium Grid:
+    #   docker-compose --profile grid up
+    #
+    # Run all services:
+    #   docker-compose --profile data-gen --profile grid up
+    #
+    # Clean up:
+    #   docker-compose down -v

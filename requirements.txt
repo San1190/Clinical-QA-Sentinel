@@ -1,61 +1,45 @@
-# Clinical-QA-Sentinel Python Dependencies
-# Healthcare Quality Assurance Automation Framework
+# Clinical-QA-Sentinel Requirements
+# Updated with refactoring dependencies
 
 # ============================================================================
 # Core Testing Framework
 # ============================================================================
-
-# Selenium WebDriver - Browser automation for UI testing
 selenium>=4.16.0
-
-# WebDriver Manager - Automatic driver management (Chrome, Firefox, etc.)
 webdriver-manager>=4.0.1
 
 # ============================================================================
 # Test Data Generation
 # ============================================================================
-
-# Faker - Synthetic data generation library
 faker>=22.0.0
+
+# ============================================================================
+# Configuration Management
+# ============================================================================
+python-dotenv>=1.0.0
 
 # ============================================================================
 # Testing & Quality Assurance
 # ============================================================================
-
-# pytest - Testing framework (optional, for future test expansion)
 pytest>=7.4.0
 pytest-html>=4.1.0
-pytest-xdist>=3.5.0  # Parallel test execution
+pytest-xdist>=3.5.0
+pytest-cov>=4.1.0
 
 # ============================================================================
 # Utilities
 # ============================================================================
-
-# python-dateutil - Date manipulation utilities
 python-dateutil>=2.8.2
 
 # ============================================================================
 # Optional: Advanced Features
 # ============================================================================
-
-# requests - HTTP library (for API testing future expansion)
 # requests>=2.31.0
-
-# pandas - Data analysis (for advanced test data manipulation)
 # pandas>=2.1.0
-
-# openpyxl - Excel file support (for test data import/export)
 # openpyxl>=3.1.2
 
 # ============================================================================
-# Development Dependencies (Optional)
+# Development Dependencies
 # ============================================================================
-
-# autopep8 - Code formatting
 # autopep8>=2.0.4
-
-# pylint - Static code analysis
 # pylint>=3.0.3
-
-# black - Code formatter
 # black>=23.12.0

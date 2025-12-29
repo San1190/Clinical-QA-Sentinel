@@ -1,0 +1,61 @@
+# ============================================================================
+# Docker Ignore File
+# ============================================================================
+# Prevents unnecessary files from being copied into Docker image
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg-info/
+dist/
+build/
+
+# Virtual Environments
+venv/
+env/
+ENV/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Git
+.git/
+.gitignore
+
+# Test Outputs (will be mounted as volumes)
+reports/
+screenshots/
+logs/
+*.log
+
+# Test Data (will be mounted as volumes)
+data/
+dummy_patients.csv
+
+# Environment Files
+.env
+.env.local
+
+# Docker
+Dockerfile
+docker-compose.yml
+.dockerignore
+
+# Documentation (not needed in container)
+*.md
+docs/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Temporary Files
+tmp/
+temp/
+*.tmp
