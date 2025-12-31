@@ -35,8 +35,8 @@ from src.patient_data_generator import SyntheticPatientGenerator
 from utils.config_loader import load_config
 
 
-def pause(mensaje, segundos=3):
-    """Pausa con cuenta regresiva"""
+def pause(mensaje, segundos=1):
+    """Pausa con cuenta regresiva - RÁPIDA"""
     print(f"\n⏸️  {mensaje}")
     for i in range(segundos, 0, -1):
         print(f"   Continuando en {i}...", end='\r')
@@ -77,7 +77,7 @@ def main():
         driver = webdriver.Chrome(service=service, options=chrome_options)
         
         print("✓ Chrome abierto - MIRA LA VENTANA")
-        pause("Observa la ventana de Chrome que se abrió", 2)
+        pause("Observa la ventana de Chrome que se abrió", 1)
         
         # ================================================================
         # 2. INSTANCIAR PAGE OBJECTS
@@ -101,16 +101,16 @@ def main():
         print(f"   Password: {password}")
         
         login_page.open()
-        pause("Mira: Se abrió la página de CURA y clickeó 'Make Appointment'", 3)
+        pause("Mira: Se abrió la página de CURA y clickeó 'Make Appointment'", 1)
         
         login_page.login_with_credentials(username, password)
-        pause("Mira: Se escribió username y password, se hizo click en Login", 3)
+        pause("Mira: Se escribió username y password, se hizo click en Login", 1)
         
         if not login_page.is_login_successful():
             raise Exception("❌ Login falló")
         
         print("✅ Login exitoso - Ahora estás en el formulario de appointment")
-        pause("Mira: Ya estamos en la página del formulario", 2)
+        pause("Mira: Ya estamos en la página del formulario", 1)
         
         # ================================================================
         # 4. GENERAR PACIENTE
