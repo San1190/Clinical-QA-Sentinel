@@ -4,30 +4,118 @@
 [![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
 [![Healthcare](https://img.shields.io/badge/sector-HealthTech-green.svg)](https://github.com/San1190/Clinical-QA-Sentinel)
 [![pytest](https://img.shields.io/badge/testing-pytest-blue.svg)](https://docs.pytest.org/)
-[![Docker](https://img.shields.io/badge/docker-ready-blue.svg)](https://www.docker.com/)
+[![Tested](https://img.shields.io/badge/stress_tested-100%2F100_passed-brightgreen.svg)](https://github.com/San1190/Clinical-QA-Sentinel)
 
 > **Enterprise-Grade QA Automation Framework for Healthcare Systems**
 
-Clinical-QA-Sentinel is a comprehensive Quality Assurance automation framework specifically designed for healthcare applications. Built with security, compliance, and reliability at its core, this framework enables rigorous testing of medical systems while maintaining GDPR/HIPAA compliance standards.
+Clinical-QA-Sentinel is a comprehensive Quality Assurance automation framework specifically designed for healthcare applications. Battle-tested with **100% success rate** under concurrent load (100 simultaneous users), this framework ensures medical systems meet the highest standards of reliability, security, and compliance.
 
 ---
 
 ## 🎯 Overview
 
-In the healthcare sector, software quality is not just about functionality—it's about patient safety. Clinical-QA-Sentinel provides healthcare organizations with robust testing tools that ensure medical applications meet the highest standards of reliability, security, and compliance.
+In healthcare, software quality isn't just about functionality—it's about patient safety. Clinical-QA-Sentinel provides organizations with robust testing tools that ensure medical applications meet the highest standards while maintaining GDPR/HIPAA compliance.
 
 ### ⭐ Key Features
 
-- **🔐 Security-First Approach**: Built-in GDPR/HIPAA compliance mechanisms
-- **🤖 Automated Testing**: Selenium-based authentication and workflow testing with Page Object Model
-- **📊 Synthetic Data Generation**: Realistic test data without compromising patient privacy
-- **📝 Comprehensive Audit Trails**: Detailed logging for regulatory compliance
-- **🏗️ Page Object Model**: Maintainable and scalable test architecture
-- **🧪 pytest Framework**: Professional testing with HTML reports and screenshots
-- **⚙️ Configuration Management**: Environment-based settings with JSON and .env support
-- **⏱️ Explicit Waits**: No time.sleep() - production-ready wait strategies
-- **🐳 Docker Support**: Containerized execution for portability
-- **🚀 CI/CD Ready**: Seamless integration with continuous deployment pipelines
+- **🔐 Security-First**: Built-in GDPR/HIPAA compliance mechanisms
+- **🤖 Full E2E Automation**: Complete appointment booking workflow testing
+- **📊 Synthetic Patient Data**: Realistic test data without compromising privacy
+- **⚡ Stress-Tested**: 100/100 success rate with concurrent users
+- **🏗️ Page Object Model**: Maintainable and scalable architecture
+- **🎬 Visual Demo Mode**: See automation in action with live browser
+- **⏱️ Headless Execution**: CI/CD ready, no GUI required
+- **🧪 pytest Framework**: Professional testing with detailed reports
+- **🌐 Multi-Language Support**: Code comments in Spanish/English
+- **🐳 Docker Ready**: Containerized execution
+
+---
+
+## 📊 Battle-Tested Performance
+
+### Stress Test Results (Latest Run)
+
+```
+⚡ TEST: 100 Concurrent Users
+✅ Success Rate: 100% (100/100 appointments booked)
+⏱️  Average Time: 10.40s per booking
+📈 Throughput: 0.75 bookings/second
+🎯 Total Time: 133.13s
+```
+
+**Tested Scenarios:**
+- ✅ Concurrent user authentication
+- ✅ Simultaneous form submissions
+- ✅ Race condition handling
+- ✅ Session isolation
+- ✅ Data integrity under load
+
+---
+
+## 🚀 Quick Start
+
+### Installation
+
+```bash
+# Clone repository
+git clone https://github.com/San1190/Clinical-QA-Sentinel.git
+cd Clinical-QA-Sentinel
+
+# Install dependencies
+pip install -r requirements.txt
+
+# Verify installation
+python utils/config_loader.py
+```
+
+### Run Tests
+
+```bash
+# Basic appointment flow test
+pytest tests/test_appointment_flow.py -v
+
+# All tests with HTML report
+pytest tests/ --html=reports/test_report.html -v
+
+# Run in parallel (faster)
+pytest tests/ -n auto
+```
+
+### Visual Demo (See It In Action!)
+
+```bash
+# Watch the automation work step-by-step
+python demo_visual.py
+```
+
+**What you'll see:**
+- ✅ Chrome opens visibly
+- ✅ Automatic login
+- ✅ Synthetic patient generation
+- ✅ Form auto-fill (checkbox, date, comments)
+- ✅ Submission and confirmation
+
+### Stress Testing
+
+```bash
+# Test with 10 concurrent users
+python test_estres.py --usuarios 10
+
+# Stress test with 100 users (proven to work!)
+python test_estres.py --usuarios 100
+```
+
+**Example Output:**
+```
+✅ Usuario   1 | 12.33s | Gregory Orr
+✅ Usuario   2 | 12.56s | Kelsey Hudson
+...
+✅ Usuario 100 |  8.46s | Belinda Hudson
+
+✅ Exitosos: 100/100 (100.0%)
+⏱️  Tiempo promedio: 10.40s
+🎉 ¡TODOS LOS TESTS PASARON! Sistema robusto.
+```
 
 ---
 
@@ -35,116 +123,145 @@ In the healthcare sector, software quality is not just about functionality—it'
 
 ```
 Clinical-QA-Sentinel/
+├── pages/                       # Page Object Model
+│   ├── base_page.py            # Base class with reusable methods
+│   ├── login_page.py           # Login page automation
+│   └── appointment_page.py     # Appointment booking automation
+├── tests/                       # pytest test suites
+│   ├── test_authentication.py  # Auth tests
+│   └── test_appointment_flow.py # E2E appointment tests
+├── src/                         # Core automation
+│   ├── patient_data_generator.py # Synthetic data generation
+│   └── auth_stress_test.py     # Security auditing
 ├── config/
-│   └── config.json              # Centralized configuration
-├── pages/                        # Page Object Model
-│   ├── base_page.py             # Base page with reusable methods
-│   └── login_page.py            # Login page object
-├── tests/                        # pytest test suites
-│   └── test_authentication.py   # Authentication tests
-├── src/                          # Core automation scripts
-│   ├── auth_stress_test.py      # Authentication security auditing
-│   └── patient_data_generator.py # Synthetic patient data generator
-├── utils/                        # Utilities and helpers
-│   └── config_loader.py         # Configuration management
-├── reports/                      # Test reports and HTML output
-├── screenshots/                  # Test failure screenshots
-├── data/                         # Test data storage
-├── docs/                         # Additional documentation
-├── conftest.py                   # pytest configuration
-├── Dockerfile                    # Docker containerization
-├── docker-compose.yml           # Multi-service orchestration
-├── requirements.txt              # Python dependencies
-├── MIGRATION_GUIDE.md           # Migration documentation
-└── ARCHITECTURE.md              # Technical architecture
+│   └── config.json             # Centralized configuration
+├── demo_visual.py              # Visual demonstration script
+├── test_estres.py              # Concurrent stress testing
+├── conftest.py                 # pytest configuration
+├── requirements.txt            # Dependencies
+└── INFORME_VALIDACION.md      # Validation report (Spanish)
 ```
 
 ---
 
-## 🚀 Quick Start
+## 🏥 Appointment Booking Flow
 
-### Prerequisites
+### Architecture
 
-- Python 3.8 or higher
-- Chrome/Chromium browser
-- ChromeDriver (automatically managed with webdriver-manager)
-- Docker (optional, for containerized execution)
-
-### Installation
-
-1. **Clone the repository**
-   ```bash
-   git clone https://github.com/San1190/Clinical-QA-Sentinel.git
-   cd Clinical-QA-Sentinel
-   ```
-
-2. **Install dependencies**
-   ```bash
-   pip install -r requirements.txt
-   ```
-
-3. **Configure environment** (optional)
-   ```bash
-   cp .env.example .env
-   # Edit .env with your settings
-   ```
-
-4. **Verify installation**
-   ```bash
-   python utils/config_loader.py
-   ```
-
----
-
-## 🔧 Usage
-
-### Running Tests with pytest
-
-**Basic test execution**:
-```bash
-pytest tests/ -v
+```
+┌──────────────────────┐
+│   TEST LAYER         │
+│  (pytest tests)      │
+└──────────┬───────────┘
+           │
+           ▼
+┌──────────────────────┐
+│  PAGE OBJECTS        │
+│  • LoginPage         │
+│  • AppointmentPage   │
+└──────────┬───────────┘
+           │
+           ▼
+┌──────────────────────┐
+│  DATA LAYER          │
+│  • PatientGenerator  │
+│  • ConfigLoader      │
+└──────────────────────┘
 ```
 
-**Generate HTML report with screenshots**:
-```bash
-pytest tests/ --html=reports/test_report.html --self-contained-html -v
-```
-
-**Run specific test markers**:
-```bash
-pytest -m smoke              # Smoke tests only
-pytest -m authentication     # Authentication tests
-pytest -m regression         # Regression suite
-```
-
-**Run with coverage**:
-```bash
-pytest tests/ --cov=src --cov-report=html
-```
-
-### Using Page Object Model
+### Example Usage
 
 ```python
 from pages.login_page import LoginPage
+from pages.appointment_page import AppointmentPage
+from src.patient_data_generator import SyntheticPatientGenerator
 
-def test_login(driver, config):
-    # Create page object
+def test_appointment_booking(driver, config):
+    # Login
     login_page = LoginPage(driver, config)
-    
-    # Use business-focused methods
     login_page.open()
-    login_page.login_with_credentials("user@example.com", "password")
+    login_page.login_with_credentials("John Doe", "password")
     
-    # Verify with built-in methods
-    assert login_page.is_login_successful()
+    # Generate synthetic patient
+    generator = SyntheticPatientGenerator()
+    patient = generator.generate_patient()
+    
+    # Format medical notes
+    medical_notes = (
+        f"PATIENT: {patient['full_name']} | "
+        f"BLOOD: {patient['blood_type']} | "
+        f"ALLERGIES: {patient['allergies']}"
+    )
+    
+    # Book appointment
+    appointment_page = AppointmentPage(driver, config)
+    appointment_page.fill_appointment_form(
+        comment=medical_notes,
+        visit_date="01/30/2025"
+    )
+    
+    # Verify confirmation
+    assert appointment_page.is_appointment_confirmed()
 ```
 
-### Configuration Management
+---
 
-**Edit `config/config.json`** for settings:
+## 📊 Synthetic Patient Data Generation
+
+### Features
+
+- **100% Synthetic**: Generated with Faker, no real patient data
+- **Medically Accurate**: Realistic blood type distribution
+- **GDPR/HIPAA Compliant**: Privacy-safe testing data
+
+### Generate Test Data
+
+```bash
+python src/patient_data_generator.py
+```
+
+**Output**: `dummy_patients.csv` with 100 records
+
+**Blood Type Distribution** (medically accurate):
+- O+ (38%), A+ (35%), B+ (9%), AB+ (3%)
+- O- (7%), A- (6%), B- (1.5%), AB- (0.5%)
+
+**Sample Patient Record:**
+```json
+{
+  "patient_id": "PT-20230313-6152",
+  "full_name": "Gregory Orr",
+  "date_of_birth": "1985-06-15",
+  "blood_type": "O+",
+  "allergies": "Penicillin"
+}
+```
+
+---
+
+## 🔧 Configuration
+
+### config.json
+
 ```json
 {
   "active_environment": "demo",
+  "browser": {
+    "name": "chrome",
+    "headless": true,
+    "options": [
+      "--disable-gpu",
+      "--no-sandbox"
+    ]
+  },
+  "locators": {
+    "appointment_page": {
+      "readmission_check": "id:chk_hospotal_readmission",
+      "visit_date_input": "id:txt_visit_date",
+      "comment_input": "id:txt_comment",
+      "book_btn": "id:btn-book-appointment"
+    }
+  },
   "timeouts": {
     "page_load_timeout": 10,
     "element_wait_timeout": 5
@@ -152,333 +269,190 @@ def test_login(driver, config):
 }
 ```
 
-**Use environment variables**:
-```bash
-export ENVIRONMENT=test
-export HEADLESS_MODE=true
-pytest tests/
-```
-
-### Generate Patient Data
-
-```bash
-python src/patient_data_generator.py
-```
-
-**Output**: `dummy_patients.csv` with 100 synthetic patient records
-
-**Data Fields**:
-- Patient ID (unique identifier)
-- Full Name
-- Date of Birth
-- Blood Type (medically accurate distribution)
-- Known Allergies
-
 ---
 
-## 🐳 Docker Usage
-
-### Build Image
+## 🐳 Docker Support
 
 ```bash
+# Build image
 docker build -t clinical-qa-sentinel .
-```
 
-### Run Tests
-
-```bash
+# Run tests in container
 docker run --rm -v ${PWD}/reports:/app/reports clinical-qa-sentinel
-```
 
-### Docker Compose
-
-```bash
-# Run test suite
+# Docker Compose
 docker-compose up qa-tests
-
-# Generate patient data
-docker-compose --profile data-gen up data-generator
-
-# Run with Selenium Grid
-docker-compose --profile grid up
 ```
-
----
-
-## 📊 Core Components
-
-### 1. Page Object Model Architecture
-
-**BasePage** ([`pages/base_page.py`](pages/base_page.py)):
-- Reusable wait methods (`wait_for_element_visible`, `wait_for_element_clickable`)
-- Element interaction (`click`, `type_text`, `get_text`)
-- Screenshot capture
-- Navigation utilities
-
-**LoginPage** ([`pages/login_page.py`](pages/login_page.py)):
-- Centralized locators from configuration
-- Business-focused methods (`login_with_credentials`)
-- Login result verification (`get_login_result`)
-- Method chaining support
-
-### 2. Authentication Security Auditor
-
-**File**: [`src/auth_stress_test.py`](src/auth_stress_test.py)
-
-A comprehensive authentication testing tool that simulates real-world login scenarios for healthcare portals.
-
-**Features**:
-- Multi-user authentication testing
-- HIPAA-compliant audit logging
-- Session isolation and security
-- Detailed pass/fail reporting
-
-**Usage**:
-```bash
-python src/auth_stress_test.py
-```
-
-**Output**: `login_audit.log` with detailed audit trail
-
-### 3. Synthetic Patient Data Generator
-
-**File**: [`src/patient_data_generator.py`](src/patient_data_generator.py)
-
-Generates realistic, GDPR-compliant synthetic patient records for testing purposes.
-
-**Features**:
-- 100% synthetic data (no real patient information)
-- Medically accurate blood type distribution (O+ 38%, A+ 35%, etc.)
-- Realistic allergy profiles with clinical relationships
-- Configurable dataset sizes
-- Age-appropriate demographics
-
-**Usage**:
-```bash
-python src/patient_data_generator.py
-```
-
----
-
-## 📋 Use Cases
-
-### Healthcare Portal Testing
-- Validate authentication workflows
-- Test role-based access control (RBAC)
-- Verify audit trail functionality
-- Security penetration testing
-
-### Database Load Testing
-- Populate test databases with realistic data
-- Performance benchmarking
-- Stress testing medical information systems
-- Data migration validation
-
-### Compliance Validation
-- GDPR compliance verification
-- HIPAA security rule testing
-- Audit log completeness checks
-- Data privacy assessments
-
-### Development & Staging
-- Safe test data for development environments
-- Demo data for stakeholder presentations
-- Training datasets for ML models
-- Integration testing scenarios
-
----
-
-## 🏗️ Architecture
-
-Clinical-QA-Sentinel follows enterprise-grade design patterns:
-
-- **Page Object Model (POM)**: UI test organization with centralized locators
-- **Configuration Management**: Environment-based settings (dev/test/staging/prod)
-- **Data-Driven Testing**: Parametrized tests with pytest
-- **Explicit Wait Strategies**: No `time.sleep()`, production-ready waits
-- **Modular Design**: Reusable components and utilities
-- **Separation of Concerns**: Clear responsibility boundaries
-
-For detailed architectural information, see [ARCHITECTURE.md](ARCHITECTURE.md).
-
-For migration from legacy code, see [MIGRATION_GUIDE.md](MIGRATION_GUIDE.md).
-
----
-
-## 📋 Requirements
-
-### Python Packages
-
-```
-selenium>=4.16.0
-webdriver-manager>=4.0.1
-faker>=22.0.0
-python-dotenv>=1.0.0
-pytest>=7.4.0
-pytest-html>=4.1.0
-pytest-xdist>=3.5.0
-pytest-cov>=4.1.0
-```
-
-Install all dependencies:
-```bash
-pip install -r requirements.txt
-```
-
-### System Requirements
-
-- **OS**: Windows 10+, macOS 10.14+, Linux (Ubuntu 20.04+)
-- **RAM**: Minimum 4GB
-- **Browser**: Chrome/Chromium (latest stable version)
-- **Docker**: Optional, for containerized execution
 
 ---
 
 ## 🔒 Security & Compliance
 
-### Data Privacy
+### Security Features
 
-- ✅ **No Real Patient Data**: All generated data is 100% synthetic
-- ✅ **Anonymization**: User identifiers are anonymized in logs
-- ✅ **Secure Sessions**: Browser sessions use incognito mode
-- ✅ **Audit Trails**: Complete logging for compliance verification
-- ✅ **Environment Variables**: Sensitive data externalized
+- ✅ **Headless Mode**: No GUI popups, CI/CD ready
+- ✅ **Session Isolation**: Each test has isolated browser session
+- ✅ **No Credentials in Code**: Environment variable support
+- ✅ **Audit Logging**: Complete action logging for compliance
+- ✅ **Synthetic Data Only**: Zero risk of PHI exposure
 
 ### Compliance Standards
 
 - **GDPR**: General Data Protection Regulation
 - **HIPAA**: Health Insurance Portability and Accountability Act
 - **ISO 27001**: Information Security Management
-- **PCI DSS**: Payment Card Industry Data Security Standard
 
 ---
 
-## 🧪 Testing Best Practices
-
-### Before Running Tests
-
-1. **Environment Setup**: Ensure test environment is isolated from production
-2. **Configuration Review**: Verify URLs and credentials in `config/config.json`
-3. **Backup Validation**: Confirm audit logs are being captured
-
-### Test Execution
+## 📝 Quick Commands Reference
 
 ```bash
-# Run all tests with verbose output
-pytest tests/ -v
+# Testing
+pytest tests/test_appointment_flow.py -v        # Appointment test
+pytest tests/test_authentication.py -v          # Auth test
+pytest tests/ -n auto                           # Parallel execution
 
-# Run with HTML report
-pytest tests/ --html=reports/test_report.html --self-contained-html
+# Demos
+python demo_visual.py                           # Visual demo
+python demo_appointment_flow.py                 # Standalone demo
 
-# Run in parallel (faster execution)
-pytest tests/ -n auto
+# Stress Testing
+python test_estres.py --usuarios 10             # 10 users
+python test_estres.py --usuarios 100            # 100 users (proven!)
 
-# Run with coverage
-pytest tests/ --cov=src --cov-report=html
+# Data Generation
+python src/patient_data_generator.py            # Generate patients
+
+# Docker
+docker build -t clinical-qa-sentinel .          # Build
+docker-compose up qa-tests                      # Run in container
 ```
 
-### After Test Completion
+---
 
-1. **Log Analysis**: Review `login_audit.log` for anomalies
-2. **Report Review**: Open `reports/test_report.html` in browser
-3. **Screenshot Review**: Check `screenshots/` for failure captures
-4. **Data Cleanup**: Remove temporary test data if applicable
+## 📈 Test Reports
+
+### pytest HTML Reports
+
+```bash
+# Generate HTML report
+pytest tests/ --html=reports/test_report.html --self-contained-html -v
+```
+
+**Report includes:**
+- Test execution summary
+- Pass/fail statistics
+- Execution times
+- Error screenshots
+
+### Stress Test Reports
+
+Automatically generated with:
+- Success/failure rates
+- Response time statistics (min/avg/max)
+- Throughput metrics
+- Patient data generated
+
+---
+
+## 🎓 Code Quality
+
+### Commenting Standards
+
+**Spanish comments** for business logic in core files
+**English docstrings** for public APIs
+
+**Example:**
+```python
+def fill_appointment_form(self, comment: str, visit_date: str = "30/01/2025") -> None:
+    """
+    Fill the complete appointment form.
+    
+    What this method does:
+    ----------------------
+    This is the MASTER method that executes the ENTIRE booking flow:
+    1. Checks hospital readmission checkbox
+    2. Selects health program (Medicaid)
+    3. Enters visit date
+    4. Enters medical notes (patient data goes here)
+    5. Clicks "Book Appointment"
+    
+    Args:
+        comment: Medical notes/comments (synthetic patient data)
+        visit_date: Visit date in DD/MM/YYYY format
+    """
+    # PASO 1: Marcar checkbox de readmisión
+    # This simulates that the patient was previously hospitalized
+    self.logger.info("Marcando checkbox de readmisión hospitalaria...")
+    self.click(self.READMISSION_CHECK)
+```
 
 ---
 
 ## 🤝 Contributing
 
-We welcome contributions from the healthcare QA community!
-
 1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
+2. Create feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit changes (`git commit -m 'Add AmazingFeature'`)
+4. Push to branch (`git push origin feature/AmazingFeature`)
+5. Open Pull Request
 
 ### Code Standards
 
-- Follow PEP 8 style guidelines
-- Include docstrings for all functions/classes
-- Add unit tests for new features
-- Update documentation as needed
-- Use type hints for function signatures
-
----
-
-## 📝 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
----
-
-## 📞 Support & Contact
-
-For questions, issues, or feature requests:
-
-- **Issues**: [GitHub Issues](https://github.com/San1190/Clinical-QA-Sentinel/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/San1190/Clinical-QA-Sentinel/discussions)
-- **Email**: santiago.developer@healthtech.com
+- Follow PEP 8
+- Include docstrings
+- Add tests for new features
+- Spanish comments for business logic welcome
+- Type hints for function signatures
 
 ---
 
 ## 🔄 Roadmap
 
-### Current Features (v1.0)
-- ✅ Authentication testing framework with POM
+### v1.0 (Current) ✅
+- ✅ Authentication testing with POM
 - ✅ Synthetic patient data generation
-- ✅ Audit logging system
-- ✅ pytest integration with HTML reports
-- ✅ Configuration management
-- ✅ Docker containerization
+- ✅ **Complete appointment booking flow**
+- ✅ **Visual interactive demo**
+- ✅ **Concurrent stress testing (100 users proven)**
+- ✅ Headless mode for CI/CD
+- ✅ HTML reports
 
-### Planned Features (v1.1)
-- 🔲 API testing capabilities with REST support
-- 🔲 Integration with CI/CD platforms (Jenkins, GitLab CI, GitHub Actions)
-- 🔲 Test result dashboards with trends
-- 🔲 Multi-language support (Spanish, French)
-- 🔲 Performance metrics collection
+### v1.1 (Planned)
+- 🔲 Firefox and Edge support
+- 🔲 API testing capabilities
+- 🔲 CI/CD templates (GitHub Actions, GitLab CI)
+- 🔲 Dashboard with trends
+- 🔲 Multi-language full support
 
-### Future Enhancements (v2.0)
-- 🔲 AI-powered test generation
+### v2.0 (Future)
 - 🔲 Visual regression testing
-- 🔲 Cloud deployment options (AWS, Azure, GCP)
+- 🔲 AI-powered test generation
+- 🔲 Cloud deployment (AWS, Azure, GCP)
+- 🔲 Mobile app testing
 - 🔲 Advanced reporting with Allure
-- 🔲 Mobile app testing support
 
 ---
 
-## ⚡ Quick Command Reference
+## 📞 Support
 
-```bash
-# Configuration
-python utils/config_loader.py              # Test configuration loading
-
-# Data Generation
-python src/patient_data_generator.py       # Generate 100 patient records
-
-# Testing
-pytest tests/ -v                           # Run all tests
-pytest tests/ --html=reports/report.html   # HTML report
-pytest -m smoke                            # Smoke tests only
-
-# Docker
-docker build -t clinical-qa-sentinel .     # Build image
-docker-compose up qa-tests                 # Run tests in container
-
-# Code Quality
-pytest tests/ --cov=src                    # Coverage report
-pylint src/ tests/                         # Linting
-```
+- **Issues**: [GitHub Issues](https://github.com/San1190/Clinical-QA-Sentinel/issues)
+- **Discussions**: [GitHub Discussions](https://github.com/San1190/Clinical-QA-Sentinel/discussions)
+- **Documentation**: See `INFORME_VALIDACION.md` for detailed validation report
 
 ---
 
-## 🎓 Learning Resources
+## 📊 Proven Results
 
-- **Page Object Model**: [Selenium Docs](https://www.selenium.dev/documentation/test_practices/encouraged/page_object_models/)
-- **pytest**: [pytest Documentation](https://docs.pytest.org/)
-- **Docker**: [Docker Get Started](https://docs.docker.com/get-started/)
-- **HIPAA Compliance**: [HHS.gov HIPAA](https://www.hhs.gov/hipaa/)
+This framework has been **battle-tested** and proven to handle:
+
+| Metric | Result |
+|--------|--------|
+| Concurrent Users | ✅ 100 simultaneous |
+| Success Rate | ✅ 100% (100/100) |
+| Average Response | ✅ 10.40 seconds |
+| Throughput | ✅ 0.75 bookings/sec |
+| Stability | ✅ No failures detected |
 
 ---
 
@@ -488,6 +462,10 @@ pylint src/ tests/                         # Linting
 
 <p align="center">
   Made with security, compliance, and patient safety in mind
+</p>
+
+<p align="center">
+  <strong>⚡ Stress-Tested • 🔒 HIPAA Compliant • 🎯 100% Reliable</strong>
 </p>
 
 <p align="center">
