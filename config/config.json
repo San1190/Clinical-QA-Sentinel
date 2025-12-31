@@ -1,18 +1,39 @@
 {
-    "browser": "chrome",
-    "env": "demo",
-    "timeout": 10,
-    "headless": false,
     "environments": {
         "dev": {
             "base_url": "http://localhost:8080",
+            "portal_url": "http://localhost:8080",
             "username": "admin",
             "password": "password"
         },
         "demo": {
             "base_url": "https://katalon-demo-cura.herokuapp.com",
+            "portal_url": "https://katalon-demo-cura.herokuapp.com",
             "username": "John Doe",
             "password": "ThisIsNotAPassword"
+        }
+    },
+    "browser": {
+        "name": "chrome",
+        "headless": false,
+        "options": [
+            "--start-maximized",
+            "--disable-extensions",
+            "--disable-blink-features=AutomationControlled"
+        ],
+        "experimental_options": {
+            "excludeSwitches": [
+                "enable-automation"
+            ],
+            "useAutomationExtension": false,
+            "prefs": {
+                "credentials_enable_service": false,
+                "profile.password_manager_enabled": false
+            }
+        },
+        "window_size": {
+            "width": 1920,
+            "height": 1080
         }
     },
     "locators": {
@@ -25,12 +46,29 @@
             "login_button": "id:btn-login",
             "success_indicator": "id:appointment",
             "error_message": "class:text-danger"
+        },
+        "appointment_page": {
+            "readmission_check": "id:chk_hospotal_readmission",
+            "medicaid_radio": "id:radio_program_medicaid",
+            "visit_date_input": "id:txt_visit_date",
+            "comment_input": "id:txt_comment",
+            "book_btn": "id:btn-book-appointment",
+            "confirmation_header": "xpath://h2[contains(text(),'Appointment Confirmation')]"
         }
     },
     "timeouts": {
         "page_load_timeout": 10,
         "element_wait_timeout": 5,
         "implicit_wait": 2
+    },
+    "logging": {
+        "level": "INFO",
+        "format": "%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+        "log_file": "logs/test_execution.log"
+    },
+    "reporting": {
+        "screenshots_dir": "screenshots",
+        "reports_dir": "reports"
     },
     "active_environment": "demo",
     "portal_url": "https://katalon-demo-cura.herokuapp.com"

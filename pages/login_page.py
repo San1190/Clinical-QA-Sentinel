@@ -107,12 +107,39 @@ class LoginPage(BasePage):
         """
         Navigate to the login page.
         
+        IMPORTANTE: En CURA Healthcare, el flujo es:
+        1. Ir a la home (portal_url)
+        2. Click en el botón "Make Appointment"
+        3. Esto nos lleva a la página de login
+        
         Returns:
             self: For method chaining
         """
+        # PASO 1: Navegar a la home de CURA
         portal_url = self.config.get('portal_url')
         self.navigate_to(portal_url)
-        self.logger.info(f"Opened login page: {portal_url}")
+        self.logger.info(f"Navegado a la home: {portal_url}")
+        
+        # PASO 2: Click en "Make Appointment" para acceder al login
+        # Este botón está en la homepage y nos lleva a la pantalla de login
+        try:
+            # Obtenemos el locator del botón desde config.json
+            homepage_locators = self.config.get('locators', {}).get('homepage', {})
+            make_appointment_btn = self._parse_locator(
+                homepage_locators.get('make_appointment_button')
+            )
+            
+            if make_appointment_btn:
+                self.logger.info("Haciendo click en 'Make Appointment'...")
+                self.click(make_appointment_btn)
+                self.logger.info("✓ Click en 'Make Appointment' exitoso - Ahora en página de login")
+            else:
+                self.logger.warning("No se encontró locator para 'Make Appointment' en config")
+                
+        except Exception as e:
+            self.logger.error(f"Error al hacer click en 'Make Appointment': {e}")
+            # Intentamos continuar de todos modos
+        
         return self
     
     def enter_username(self, username: str) -> 'LoginPage':
