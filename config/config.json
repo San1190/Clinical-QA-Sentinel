@@ -15,7 +15,7 @@
     },
     "browser": {
         "name": "chrome",
-        "headless": false,
+        "headless": true,
         "options": [
             "--start-maximized",
             "--disable-extensions",

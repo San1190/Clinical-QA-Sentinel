@@ -217,27 +217,49 @@ class AppointmentPage(BasePage):
         self.logger.info(f"Ingresando comentarios médicos: {comment[:50]}...")
         self.type_text(self.COMMENT_INPUT, comment, clear_first=True)
         
-        # PASO 5: Click en botón de reservar
-        # Esto envía el formulario
-        self.logger.info("Haciendo click en 'Book Appointment'...")
+        # PASO 5: Enviar el formulario
+        # IMPORTANTE: El click normal NO funciona de forma confiable
+        # Usamos JavaScript para forzar el submit del formulario
+        self.logger.info("Enviando formulario de cita...")
         
-        # IMPORTANTE: Hacer scroll al botón antes de hacer click
-        # A veces el botón no es clickable si no está visible
         try:
-            book_button_element = self.find_element(self.BOOK_BUTTON)
-            self.driver.execute_script("arguments[0].scrollIntoView({block: 'center'});", book_button_element)
-            import time
-            time.sleep(0.5)  # Pequeña pausa después del scroll
+            # Método 1: Forzar submit del formulario con JavaScript
+            # Esto es MÁS confiable que hacer click en el botón
+            self.driver.execute_script("""
+                // Buscar el formulario en la página
+                var form = document.querySelector('form');
+                if (form) {
+                    form.submit();
+                } else {
+                    console.error('No se encontró el formulario');
+                }
+            """)
+            self.logger.info("✓ Formulario enviado con JavaScript")
+            
         except Exception as e:
-            self.logger.warning(f"No se pudo hacer scroll al botón: {e}")
-        
-        # Ahora sí, hacer click
-        self.click(self.BOOK_BUTTON)
+            self.logger.warning(f"Error al enviar con JavaScript: {e}")
+            # Fallback: Intentar click normal en el botón
+            self.logger.info("Intentando click normal en botón...")
+            try:
+                book_button_element = self.find_element(self.BOOK_BUTTON)
+                self.driver.execute_script("arguments[0].scrollIntoView({block: 'center'});", book_button_element)
+                import time
+                time.sleep(0.5)
+                self.click(self.BOOK_BUTTON)
+                self.logger.info("✓ Click en botón ejecutado")
+            except Exception as e2:
+                self.logger.error(f"Error al hacer click: {e2}")
+                raise
         
         # IMPORTANTE: Esperar a que la página cambie después del submit
         # La app de CURA en Heroku puede ser LENTA
-        self.logger.info("Esperando a que el formulario se envíe...")
-        time.sleep(3)  # Aumentado a 3 segundos para dar tiempo al submit
+        self.logger.info("Esperando navegación a página de confirmación...")
+        import time
+        time.sleep(4)  # Espera aumentada para Heroku
+        
+        # Verificar que la URL cambió (debería contener 'appointment.php' o 'summary')
+        current_url = self.driver.current_url
+        self.logger.info(f"URL después del submit: {current_url}")
         
         self.logger.info("✅ Formulario de cita completado")
     

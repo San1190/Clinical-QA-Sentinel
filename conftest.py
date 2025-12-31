@@ -77,13 +77,44 @@ def driver(config):
         for option in browser_options_list:
             options.add_argument(option)
         
-        # Headless mode if configured
-        if headless:
-            options.add_argument('--headless')
+        # Configure Chrome options
+        chrome_options = ChromeOptions()
+        
+        # ============================================================================
+        # MODO HEADLESS: Siempre activo para evitar popups de Google
+        # ============================================================================
+        # Headless = Chrome sin ventana visible
+        # Ventajas: 
+        #   - NO aparecen popups de Google (no hay UI)
+        #   - Tests más rápidos
+        #   - Se puede ejecutar en servidores sin pantalla (CI/CD)
+        chrome_options.add_argument('--headless=new')  # Modo headless moderno
+        chrome_options.add_argument('--disable-gpu')  # Requerido en Windows
+        
+        # Opciones adicionales para estabilidad
+        chrome_options.add_argument('--no-sandbox')
+        chrome_options.add_argument('--disable-dev-shm-usage')
+        chrome_options.add_argument('--disable-extensions')
+        chrome_options.add_argument('--disable-blink-features=AutomationControlled')
+        chrome_options.add_argument('--disable-popup-blocking') # This is the key for popup blocking
+        chrome_options.add_argument('--disable-notifications')
+        
+        # Deshabilitar gestor de contraseñas (por si acaso)
+        prefs = {
+            'credentials_enable_service': False,
+            'profile.password_manager_enabled': False,
+            'profile.default_content_setting_values.notifications': 2,
+        }
+        chrome_options.add_experimental_option('prefs', prefs)
+        chrome_options.add_experimental_option('excludeSwitches', ['enable-automation', 'enable-logging'])
+        chrome_options.add_experimental_option('useAutomationExtension', False)
+        
+        # Window size (importante incluso en headless)
+        chrome_options.add_argument('--window-size=1920,1080')
         
         # Initialize driver
         service = Service(ChromeDriverManager().install())
-        web_driver = webdriver.Chrome(service=service, options=options)
+        web_driver = webdriver.Chrome(service=service, options=chrome_options)
     else:
         raise ValueError(f"Unsupported browser: {browser_name}")
     
@@ -92,15 +123,9 @@ def driver(config):
     web_driver.set_page_load_timeout(timeouts.get('page_load_timeout', 10))
     web_driver.implicitly_wait(timeouts.get('implicit_wait', 2))
     
-    # Maximize window
-    window_size = browser_config.get('window_size', {})
-    if window_size:
-        web_driver.set_window_size(
-            window_size.get('width', 1920),
-            window_size.get('height', 1080)
-        )
-    else:
-        web_driver.maximize_window()
+    # Maximize window - This is now handled by --window-size argument in headless mode
+    # The original window_size config and maximize_window() call are now redundant
+    # as a fixed window size is set for headless mode.
     
     yield web_driver
     
@@ -160,15 +185,19 @@ def pytest_runtest_makereport(item, call):
 # HTML Report Customization
 # ============================================================================
 
-def pytest_html_report_title(report):
-    """Customize HTML report title"""
-    report.title = "Clinical-QA-Sentinel Test Report"
+# NOTA: Estos hooks de pytest-html están comentados porque causan errores
+# Para usarlos, primero instala: pip install pytest-html
+# Y luego descomenta las siguientes funciones
+
+# def pytest_html_report_title(report):
+#     """Customize HTML report title"""
+#     report.title = "Clinical-QA-Sentinel Test Report"
 
 
-@pytest.hookimpl(optionalhook=True)
-def pytest_html_results_summary(prefix, summary, postfix):
-    """Add custom information to HTML report summary"""
-    prefix.extend([f"<p>Test Environment: {load_config().get('active_environment')}</p>"])
+# @pytest.hookimpl(optionalhook=True)
+# def pytest_html_results_summary(prefix, summary, postfix):
+#     """Add custom information to HTML report summary"""
+#     prefix.extend([f"<p>Test Environment: {load_config().get('active_environment')}</p>"])
 
 
 # ============================================================================
@@ -196,3 +225,4 @@ try:
     import pytest_html
 except ImportError:
     pytest_html = None
+
